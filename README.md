@@ -1,7 +1,6 @@
 # Simple AiApi Library (Android & Kotlin/Java)
 
 [![](https://jitpack.io/v/guy-4444/AiApiHelper.svg)](https://jitpack.io/#guy-4444/AiApiHelper)
-[![](https://jitpack.io/v/guy-4444/aiapi.svg)](https://jitpack.io/#guy-4444/aiapi)
 
 A lightweight, zero-dependency helper library to seamlessly connect your Android or Java/Kotlin applications to modern AI APIs like Google Gemini, OpenAI, and xAI. 
 
@@ -91,6 +90,24 @@ fun main() {
     println(character.name)      // Auto-Generated Name
     println(character.classType) // "Wizard"
     println(character.level)     // 5
+}
+```
+
+### Fetching Lists of Objects
+You can ask the AI to generate a `List` of objects directly. The library handles the root JSON array parsing automatically.
+
+```kotlin
+data class City(val name: String, val population: Int)
+
+fun main() {
+    val ai = SimpleAi("your-api-key", AiModel.GEMINI_3_1_FLASH_PREVIEW)
+    
+    // Ask for a list by explicitly typing it as List<City>
+    val cities: List<City> = ai.askForType("Give me the top 3 major cities in Israel.")
+    
+    cities.forEach { city ->
+        println("${city.name} - Pop: ${city.population}")
+    }
 }
 ```
 
