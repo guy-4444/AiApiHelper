@@ -1,5 +1,7 @@
 # Simple AiApi Library (Android & Kotlin/Java)
 
+[![](https://jitpack.io/v/guy-4444/aiapi.svg)](https://jitpack.io/#guy-4444/aiapi)
+
 A lightweight, zero-dependency helper library to seamlessly connect your Android or Java/Kotlin applications to modern AI APIs like Google Gemini, OpenAI, and xAI. 
 
 Designed specifically for students and hobbyists to bypass complex REST configuration and focus solely on AI integration.
@@ -12,9 +14,11 @@ Designed specifically for students and hobbyists to bypass complex REST configur
 
 ---
 
-## Installation (JitPack)
+## Installation 
 
-### 1. Add the Repository
+### Gradle (Kotlin DSL)
+
+**1. Add the Repository**
 In your project-level `settings.gradle.kts` (or `build.gradle`), ensure JitPack is added to your repositories block:
 ```kotlin
 dependencyResolutionManagement {
@@ -26,13 +30,30 @@ dependencyResolutionManagement {
 }
 ```
 
-### 2. Add the Dependency
+**2. Add the Dependency**
 In your module-level `build.gradle.kts` (usually `app/build.gradle.kts`), add the dependency:
 ```kotlin
 dependencies {
-    // Replace 'YourUsername' with the GitHub username hosting the repo
-    implementation("com.github.YourUsername:aiapi:1.0.0") 
+    implementation("com.github.guy-4444:aiapi:1.01") 
 }
+```
+
+### Maven (`pom.xml`)
+If you are using a pure Java Maven project, add JitPack to your repositories and then add the dependency constraint:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.guy-4444</groupId>
+    <artifactId>aiapi</artifactId>
+    <version>1.01</version>
+</dependency>
 ```
 
 ---
@@ -54,7 +75,7 @@ fun main() {
 }
 ```
 
-### Complex Typed Objects
+### Complex Typed Objects (Data Classes)
 You can define a Kotlin `data class` with any nested structure you want, and the AI will populate it.
 
 ```kotlin
@@ -72,8 +93,26 @@ fun main() {
 }
 ```
 
+### Deeply Nested Output (Lists and Sub-Objects)
+You can even nest properties and arrays. Simply define the models, and the library handles the rest.
+*(Note: Be sure to use nullable types `?` for nested properties to prevent Gson extraction crashes on empty AI outputs).*
+
+```kotlin
+data class Address(val street: String, val city: String)
+data class User(val name: String, val age: Int, val address: Address?, val tags: List<String>?)
+
+fun main() {
+    val ai = SimpleAi("your-api-key", AiModel.GEMINI_3_1_FLASH_PREVIEW)
+    val user: User = ai.askForType("Generate a random fictional user profile living in Paris with 3 hobby tags.")
+    
+    println("Name: ${user.name}")
+    println("City: ${user.address?.city}")
+    println("Tags: ${user.tags?.joinToString()}")
+}
+```
+
 ### Tracking Costs
-To view how much your API calls are costing regarding token usage:
+To view how much your API calls are costing regarding exact token usage:
 ```kotlin
 ai.logCost = true
 
