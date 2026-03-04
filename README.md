@@ -93,6 +93,24 @@ fun main() {
 }
 ```
 
+### Fetching Lists of Objects
+You can ask the AI to generate a `List` of objects directly. The library handles the root JSON array parsing automatically.
+
+```kotlin
+data class City(val name: String, val population: Int)
+
+fun main() {
+    val ai = SimpleAi("your-api-key", AiModel.GEMINI_3_1_FLASH_PREVIEW)
+    
+    // Ask for a list by explicitly typing it as List<City>
+    val cities: List<City> = ai.askForType("Give me the top 3 major cities in Israel.")
+    
+    cities.forEach { city ->
+        println("${city.name} - Pop: ${city.population}")
+    }
+}
+```
+
 ### Deeply Nested Output (Lists and Sub-Objects)
 You can even nest properties and arrays. Simply define the models, and the library handles the rest.
 *(Note: Be sure to use nullable types `?` for nested properties to prevent Gson extraction crashes on empty AI outputs).*
