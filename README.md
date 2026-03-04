@@ -1,5 +1,6 @@
 # Simple AiApi Library (Android & Kotlin/Java)
 
+[![](https://jitpack.io/v/guy-4444/AiApiHelper.svg)](https://jitpack.io/#guy-4444/AiApiHelper)
 [![](https://jitpack.io/v/guy-4444/aiapi.svg)](https://jitpack.io/#guy-4444/aiapi)
 
 A lightweight, zero-dependency helper library to seamlessly connect your Android or Java/Kotlin applications to modern AI APIs like Google Gemini, OpenAI, and xAI. 
