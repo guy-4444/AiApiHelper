@@ -16,12 +16,30 @@ class GeminiClient(
     private val httpClient = HttpClient.newHttpClient()
     private val gson = Gson()
 
-    override fun generate(prompt: String): String {
+    override fun generate(prompt: String, vararg files: java.io.File): String {
         val url = "https://generativelanguage.googleapis.com/v1beta/models/${model.modelName}:generateContent?key=$apiKey"
+
+        val partsArray = com.google.gson.JsonArray()
+        
+        // Add file parts if provided
+        for (file in files) {
+            val mimeType = org.guy.library.util.FileUtil.getMimeType(file)
+            val base64Data = org.guy.library.util.FileUtil.encodeFileToBase64(file)
+            
+            val inlineDataObj = JsonObject().apply {
+                addProperty("mime_type", mimeType)
+                addProperty("data", base64Data)
+            }
+            val filePart = JsonObject().apply {
+                add("inline_data", inlineDataObj)
+            }
+            partsArray.add(filePart)
+        }
 
         // Build the JSON request body
         val textPart = JsonObject().apply { addProperty("text", prompt) }
-        val partsArray = com.google.gson.JsonArray().apply { add(textPart) }
+        partsArray.add(textPart)
+        
         val contentObject = JsonObject().apply { add("parts", partsArray) }
         val contentsArray = com.google.gson.JsonArray().apply { add(contentObject) }
         val requestBody = JsonObject().apply { add("contents", contentsArray) }
@@ -41,13 +59,31 @@ class GeminiClient(
         return parseResponse(response.body())
     }
 
-    override fun <T> generateObject(prompt: String, type: java.lang.reflect.Type): T {
+    override fun <T> generateObject(prompt: String, type: java.lang.reflect.Type, vararg files: java.io.File): T {
         val url = "https://generativelanguage.googleapis.com/v1beta/models/${model.modelName}:generateContent?key=$apiKey"
 
         val systemInstructionText = org.guy.library.util.buildSystemInstruction(type)
 
+        val partsArray = com.google.gson.JsonArray()
+        
+        // Add file parts if provided
+        for (file in files) {
+            val mimeType = org.guy.library.util.FileUtil.getMimeType(file)
+            val base64Data = org.guy.library.util.FileUtil.encodeFileToBase64(file)
+            
+            val inlineDataObj = JsonObject().apply {
+                addProperty("mime_type", mimeType)
+                addProperty("data", base64Data)
+            }
+            val filePart = JsonObject().apply {
+                add("inline_data", inlineDataObj)
+            }
+            partsArray.add(filePart)
+        }
+
         val textPart = JsonObject().apply { addProperty("text", prompt) }
-        val partsArray = com.google.gson.JsonArray().apply { add(textPart) }
+        partsArray.add(textPart)
+        
         val contentObject = JsonObject().apply { add("parts", partsArray) }
         val contentsArray = com.google.gson.JsonArray().apply { add(contentObject) }
         
@@ -98,6 +134,8 @@ class GeminiClient(
             val completionTokens = usage.get("candidatesTokenCount")?.asInt ?: 0
             onTokenUsage?.invoke(promptTokens, completionTokens)
         }
+        
+        println("RAW JSON: " + rootObject.toString())
 
         return rootObject
             .getAsJsonArray("candidates")

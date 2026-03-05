@@ -129,6 +129,45 @@ fun main() {
 }
 ```
 
+### Multimodal File Uploads (PDFs and Images)
+Modern AI models natively support analyzing files. You can pass one or more `java.io.File` objects directly to `ask` or `askForType`. The library automatically handles Base64-encoding and multipart uploads for you!
+
+```kotlin
+data class InvoiceItem(
+    val name: String,
+    val amount: Double,
+    val priceEach: Double,
+    val priceTotal: Double,
+    val currency: String,
+    val currencySymbol: String,
+)
+
+data class Invoice(
+    val seller: String,
+    val buyer: String,
+    val amount: Double,
+    val currency: String,
+    val currencySymbol: String,
+    val items: List<InvoiceItem>?
+)
+
+fun main() {
+    val ai = SimpleAi("your-api-key", AiModel.GEMINI_3_1_FLASH_LITE_PREVIEW)
+    val pdfFile = java.io.File("invoice_demo4.pdf")
+
+    // Have the AI extract the specific data points from the PDF into your class:
+    val prompt = "Analyze this attached invoice. Extract the seller, buyer, total amount, and items."
+    val invoice: Invoice = ai.askForType(prompt, pdfFile)
+
+    println("Seller: ${invoice.seller}")
+    println("Total Amount: ${invoice.amount}${invoice.currencySymbol}")
+    
+    invoice.items?.forEach { item ->
+        println("\t${item.name} - ${item.amount} x ${item.priceEach}${item.currencySymbol} - ${item.priceTotal}${item.currencySymbol}")
+    }
+}
+```
+
 ### Tracking Costs
 To view how much your API calls are costing regarding exact token usage:
 ```kotlin

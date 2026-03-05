@@ -19,6 +19,7 @@ internal fun buildSystemInstruction(type: Type): String {
         You are a strict data-generator. 
         You MUST return ONLY valid JSON matching this schema/structure based on the requested type.
         Do not wrap the JSON in markdown code blocks.
+        Never include commas or currency symbols (like $, €, £) inside numeric fields, return pure raw numbers (e.g. 1000.50 instead of "$1,000.50").
         $rootInstruction
         
         ${describeType(type)}
@@ -46,7 +47,11 @@ private fun describeType(type: Type): String {
             return "A JSON array containing objects of the following type:\n" + describeType(type.componentType)
         }
         if (type.isPrimitive || type == String::class.java || Number::class.java.isAssignableFrom(type) || type == Boolean::class.javaObjectType || type == Boolean::class.javaPrimitiveType) {
-            return "Primitive/Simple Type: ${type.simpleName}"
+            val baseDesc = "Primitive/Simple Type: ${type.simpleName}"
+            if (type == Double::class.javaObjectType || type == Double::class.javaPrimitiveType || type == Float::class.javaObjectType || type == Float::class.javaPrimitiveType) {
+                return "$baseDesc (MUST be a raw decimal number, e.g 1000.50. Extract the FULL numeric value from the text. DO NOT truncate it. DO NOT use commas or currency signs)"
+            }
+            return baseDesc
         }
         
         val fieldsDesc = type.declaredFields.joinToString("\n") { field ->

@@ -28,6 +28,24 @@ data class User(
     val games: List<Game>
 )
 
+data class InvoiceItem(
+    val name: String,
+    val amount: Double,
+    val priceEach: Double,
+    val priceTotal: Double,
+    val currency: String,
+    val currencySymbol: String,
+)
+
+data class Invoice(
+    val seller: String,
+    val buyer: String,
+    val amount: Double,
+    val currency: String,
+    val currencySymbol: String,
+    val items: List<InvoiceItem>?
+)
+
 lateinit var OPENAI_API_KEY: String
 lateinit var GROK_API_KEY: String
 lateinit var GEMINI_API_KEY: String
@@ -62,18 +80,24 @@ fun main() {
 
 
     // Ask the AI to generate a profile matching our complex nested structure
-    println("Fetching user profile from AI...")
-    val user: User = ai.askForType("Generate a random fake gamer profile for a user. Include a realistic fictional address and a list of 3 of their favorite video games.")
+    val pdfFile = File("invoice_demo.pdf")
+    if (!pdfFile.exists()) {
+        println("⚠️ Please place a file named 'invoice_demo.png' in the project root to test multimodal features.")
+        return
+    }
 
-    // Print the results to verify the nesting worked
-    println("\n--- Generated User Profile ---")
-    println("Name: ${user.name}")
-    println("Age: ${user.age}")
-    println("Address: ${user.address.street}, ${user.address.city}, ${user.address.country} ${user.address.zipCode}")
+    println("Parsing invoice with AI model...")
+    val prompt = "Analyze this attached invoice. Extract the seller, buyer, total amount, and a list of all items with their prices. Please validate the data to ensure it's accurate from the document."
+    val invoice: Invoice = ai.askForType(prompt, pdfFile)
 
-    println("Favorite Games:")
-    user.games.forEach { game ->
-        println("  - ${game.title} [Genre: ${game.genre}]")
+    println("\n--- Parsed Invoice Data ---")
+    println("Seller: ${invoice.seller}")
+    println("Buyer: ${invoice.buyer}")
+    println("Total Amount: $${invoice.amount}${invoice.currencySymbol}")
+    
+    println("Items:")
+    invoice.items?.forEach { item ->
+        println("\t${item.name} - ${item.amount} x ${item.priceEach}${item.currencySymbol} - ${item.priceTotal}${item.currencySymbol}")
     }
 }
 
