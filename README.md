@@ -132,6 +132,22 @@ fun main() {
 ### Multimodal File Uploads (PDFs and Images)
 Modern AI models natively support analyzing files. You can pass one or more `java.io.File` objects directly to `ask` or `askForType`. The library automatically handles Base64-encoding and multipart uploads for you!
 
+#### Simple Image Description
+If you just want a standard text response describing an image:
+
+```kotlin
+fun main() {
+    val ai = SimpleAi("your-api-key", AiModel.OPENAI_GPT_4O_MINI)
+    val imageFile = java.io.File("image_demo.png")
+
+    val description = ai.ask("Describe what is in this image.", imageFile)
+    println(description)
+}
+```
+
+#### Extracting Structured Data
+For structured extraction, like validating a complex PDF into a Kotlin class:
+
 ```kotlin
 data class InvoiceItem(
     val name: String,

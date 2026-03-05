@@ -80,24 +80,34 @@ fun main() {
 
 
     // Ask the AI to generate a profile matching our complex nested structure
-    val pdfFile = File("invoice_demo.pdf")
-    if (!pdfFile.exists()) {
-        println("⚠️ Please place a file named 'invoice_demo.png' in the project root to test multimodal features.")
-        return
-    }
+//    val pdfFile = File("invoice_demo4.pdf")
+//    if (!pdfFile.exists()) {
+//        println("⚠️ Please place a file named 'invoice_demo.png' in the project root to test multimodal features.")
+//        return
+//    }
+//
+//    println("Parsing invoice with AI model...")
+//    val prompt = "Analyze this attached invoice. Extract the seller, buyer, total amount, and a list of all items with their prices. Please validate the data to ensure it's accurate from the document."
+//    val invoice: Invoice = ai.askForType(prompt, pdfFile)
+//
+//    println("\n--- Parsed Invoice Data ---")
+//    println("Seller: ${invoice.seller}")
+//    println("Buyer: ${invoice.buyer}")
+//    println("Total Amount: $${invoice.amount}${invoice.currencySymbol}")
+//
+//    println("Items:")
+//    invoice.items?.forEach { item ->
+//        println("\t${item.name} - ${item.amount} x ${item.priceEach}${item.currencySymbol} - ${item.priceTotal}${item.currencySymbol}")
+//    }
 
-    println("Parsing invoice with AI model...")
-    val prompt = "Analyze this attached invoice. Extract the seller, buyer, total amount, and a list of all items with their prices. Please validate the data to ensure it's accurate from the document."
-    val invoice: Invoice = ai.askForType(prompt, pdfFile)
-
-    println("\n--- Parsed Invoice Data ---")
-    println("Seller: ${invoice.seller}")
-    println("Buyer: ${invoice.buyer}")
-    println("Total Amount: $${invoice.amount}${invoice.currencySymbol}")
-    
-    println("Items:")
-    invoice.items?.forEach { item ->
-        println("\t${item.name} - ${item.amount} x ${item.priceEach}${item.currencySymbol} - ${item.priceTotal}${item.currencySymbol}")
+    // Ask the AI to describe an image
+    val imageFile = File("image_demo.png")
+    if (imageFile.exists()) {
+        println("\nAsking AI to describe the image...")
+        val description = ai.ask("Describe what is in this image.", imageFile)
+        println("Image Description:\n$description")
+    } else {
+        println("\n⚠️ Please place a file named 'image_demo.png' in the project root to test image description.")
     }
 }
 
