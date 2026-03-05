@@ -34,7 +34,7 @@ dependencyResolutionManagement {
 In your module-level `build.gradle.kts` (usually `app/build.gradle.kts`), add the dependency:
 ```kotlin
 dependencies {
-    implementation("com.github.guy-4444:aiapi:1.01") 
+    implementation("com.github.guy-4444:aiapi:1.03") 
 }
 ```
 
@@ -52,7 +52,7 @@ If you are using a pure Java Maven project, add JitPack to your repositories and
 <dependency>
     <groupId>com.github.guy-4444</groupId>
     <artifactId>aiapi</artifactId>
-    <version>1.01</version>
+    <version>1.03</version>
 </dependency>
 ```
 
