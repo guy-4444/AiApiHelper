@@ -184,6 +184,22 @@ fun main() {
 }
 ```
 
+### Generating Images (DALL-E)
+You can request the AI to generate images using the `ImageAi` class. Note that image API pricing is calculated per-image rather than per-tokens.
+
+```kotlin
+import org.guy.library.ImageAi
+import org.guy.library.models.ImageAiModel
+
+fun main() {
+    val ai = ImageAi("your-api-key-here", ImageAiModel.OPENAI_DALL_E_3)
+    
+    // Generate a single image and get the URL
+    val imageUrl = ai.generateImage("A futuristic city at sunset with flying cars.")
+    println("Image URL: $imageUrl")
+}
+```
+
 ### Tracking Costs
 To view how much your API calls are costing regarding exact token usage:
 ```kotlin

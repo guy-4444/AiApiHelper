@@ -22,7 +22,7 @@ enum class AiModel(
     OPENAI_O3_PRO("o3-pro", 150.00, 600.00),
 
     // xAI (Grok) Models (Latest generation)
-    GROK_4_1_FAST("grok-4.1-fast", 0.20, 0.80),
+    GROK_4_1_FAST("grok-4-1-fast-non-reasoning", 0.20, 0.80),
     GROK_4_1_FAST_REASONING("grok-4-1-fast-reasoning", 0.30, 1.20);
 
     fun isGemini() = this.name.startsWith("GEMINI")

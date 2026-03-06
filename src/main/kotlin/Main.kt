@@ -1,6 +1,8 @@
 package org.guy.library
 
 import org.guy.library.models.AiModel
+import org.guy.library.models.ImageAiModel
+import org.guy.library.ImageAi
 import java.io.File
 import java.io.FileInputStream
 import java.util.Properties
@@ -103,11 +105,23 @@ fun main() {
     // Ask the AI to describe an image
     val imageFile = File("image_demo.png")
     if (imageFile.exists()) {
-        println("\nAsking AI to describe the image...")
-        val description = ai.ask("Describe what is in this image.", imageFile)
-        println("Image Description:\n$description")
+//        println("\nAsking AI to describe the image...")
+//        val description = ai.ask("Describe what is in this image.", imageFile)
+//        println("Image Description:\n$description")
     } else {
-        println("\n⚠️ Please place a file named 'image_demo.png' in the project root to test image description.")
+//        println("\n⚠️ Please place a file named 'image_demo.png' in the project root to test image description.")
+    }
+
+    // Ask the AI to generate an image
+    // You can swap this with GEMINI_2_5_FLASH_IMAGE or GROK_2_IMAGE_LATEST
+    val imageAi = ImageAi(GEMINI_API_KEY, ImageAiModel.GEMINI_2_5_FLASH_IMAGE_EXP)
+    imageAi.logCost = true
+    println("\nGenerating image...")
+    runCatching {
+        val generatedImageUrl = imageAi.generateImage("A cute siamese cat in space.")
+        println("Generated Image URL: $generatedImageUrl")
+    }.onFailure {
+        println("Failed to generate image: ${it.message}")
     }
 }
 
